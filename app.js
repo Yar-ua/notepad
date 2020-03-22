@@ -9,10 +9,13 @@ var errorHandler = require('errorhandler');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-// var log = require('./libs/log')(module);
+var log = require('./libs/log')(module);
 var router = express.Router();
 
-// var mongoose = require('mongoose');
+var mongoose = require('mongoose');
+var db = mongoose.connect("mongodb://localhost:27017/notepad");
+
+var Document = require('./models.js').Document(db);
 // var db = require('./libs/mongoose');
 
 var app = express();
@@ -53,7 +56,11 @@ app.use(router);
 
 
 var server = http.createServer(app).listen(3000, function(){
-  console.log('-> Express server listening on port 3000');
+  log.info('-> Express server listening on port 3000');
+});
+
+app.get('/', function(req, res) {
+  res.render('index.jade', { title: 'Express' });
 });
 
 module.exports = server;
